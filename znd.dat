@@ -1,0 +1,44 @@
+! Steady 1D ZND profile (reaction zone) w/ curvature
+rtol 1e-3
+derefcrit 0.2
+refcrit 0.3
+screen
+!react mesa_34.net
+react tim13
+msbdf
+hll
+noviscous
+
+rho_0 2e5
+T_0 3e8
+
+START "HeCO steady calculation"
+   LEVELS 1
+   XYZ 1
+      X 1 0.0 5e7 FREE
+      SCALARS 14 ADVECT 14
+   CASE HECOZND13
+END
+order 1
+cns 1e-3
+!
+! Settings for the steady solver
+par0 1e-4   ! velocity tolerance
+par1 10000   ! nsteps to take
+par2 0.9999 ! max mach number
+par3 0.0    ! delta mach tolerance
+par4 0.01    ! time step reduction near sonic pt
+par5 1.0e-10 ! initial dx
+par6 1.01     ! time step increase factor
+
+! solve the steady problem
+$ rm znd_*.xq
+mon znd
+! curvature
+curv 1e-8
+! lower upper guess verbose/grot
+dosteady 0.6e9 1.0e9 0.8e9 verbose bisect	! low high guess verbose/grot
+!$ gnuplot znd.plt
+q
+
+
